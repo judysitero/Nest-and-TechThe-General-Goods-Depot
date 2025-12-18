@@ -85,7 +85,7 @@ public class ProductsController
         {
             /// The controller is calling productDao.create(product) inside the updateProduct method!
             ///so this means every time I try to "update" a product (PUT request), it ignores the ID and just creates a new one instead.
-            //productDao.create(product); // <--- THE BUG!
+            //productDao.create(product); // <--- THE BUG! Creates Duplicate
 
             // FIXED: Call update() instead of create()
             productDao.update(id, product);

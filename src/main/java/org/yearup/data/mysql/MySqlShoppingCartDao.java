@@ -60,7 +60,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             preparedstatement.setInt(1, userId);
             preparedstatement.setInt(2, productId);
             preparedstatement.setInt(3, quantity);
-            preparedstatement.setInt(4, quantity); // *This should add to existing quantity
+            preparedstatement.setInt(4, quantity); // *This will add to existing quantity
 
             preparedstatement.executeUpdate();
         } catch (SQLException e) {

@@ -4,6 +4,6 @@ import org.yearup.models.Profile;
 import org.yearup.models.SalesOrder;
 import org.yearup.models.ShoppingCart;
 
-public class SalesOrderDao {
+public interface SalesOrderDao {
     SalesOrder create(Profile profile, ShoppingCart cart);
 }

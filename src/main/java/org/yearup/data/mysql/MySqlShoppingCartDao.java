@@ -1,5 +1,6 @@
 package org.yearup.data.mysql;
 
+import org.springframework.stereotype.Component;
 import org.yearup.data.ShoppingCartDao;
 import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDao {
 
     public MySqlShoppingCartDao(DataSource dataSource) {
@@ -18,7 +20,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
     @Override
     public ShoppingCart getByUserId(int userId) {
-        ShoppingCart cart = new ShoppingCart();
+        ShoppingCart shoppingcart = new ShoppingCart();
 
         // Joining products table to get item details (name, price) alongside quantity
         String query = "SELECT products.*, shopping_cart.quantity " +
@@ -39,13 +41,13 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
                 item.setProduct(product);
                 item.setQuantity(quantity);
 
-                cart.add(item);
+                shoppingcart.add(item);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return cart;
+        return shoppingcart;
     }
     @Override
     public void addItemToCart(int userId, int productId, int quantity) {
@@ -86,10 +88,11 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         String query = "DELETE FROM shopping_cart WHERE user_id = ?";
 
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setInt(1, userId);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, userId);
 
-            statement.executeUpdate();
+            preparedStatement.executeUpdate();
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

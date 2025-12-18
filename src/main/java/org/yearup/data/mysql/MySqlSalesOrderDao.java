@@ -22,31 +22,29 @@ public class MySqlSalesOrderDao extends MySqlDaoBase implements SalesOrderDao {
     @Override
     public SalesOrder create(Profile profile, ShoppingCart cart) {
         // 1. Create the Order in the database
-        String orderSql = "INSERT INTO orders (user_id, date, address, city, state, zip, shipping_amount) " +
+        String query = "INSERT INTO orders (user_id, date, address, city, state, zip, shipping_amount) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(orderSql, Statement.RETURN_GENERATED_KEYS);
-            statement.setInt(1, profile.getUserId());
-            statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
-            statement.setString(3, profile.getAddress());
-            statement.setString(4, profile.getCity());
-            statement.setString(5, profile.getState());
-            statement.setString(6, profile.getZip());
-            statement.setBigDecimal(7, BigDecimal.ZERO); // Free shipping for now
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, profile.getUserId());
+            preparedStatement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            preparedStatement.setString(3, profile.getAddress());
+            preparedStatement.setString(4, profile.getCity());
+            preparedStatement.setString(5, profile.getState());
+            preparedStatement.setString(6, profile.getZip());
+            preparedStatement.setBigDecimal(7, BigDecimal.ZERO); // Free shipping for now
 
-            statement.executeUpdate();
+            preparedStatement.executeUpdate();
 
             // 2. Get the new Order ID
             int newOrderId = -1;
 
-            ResultSet keys = statement.getGeneratedKeys();
+            ResultSet keys = preparedStatement.getGeneratedKeys();
             if (keys.next()) {
                 newOrderId = keys.getInt(1);
             }
 
-            // 3. Move items from Cart to OrderLineItems
-            // We loop through the cart items and insert them into the database
             String itemSql = "INSERT INTO order_line_items (order_id, product_id, sales_price, quantity, discount) " +
                     "VALUES (?, ?, ?, ?, ?)";
 

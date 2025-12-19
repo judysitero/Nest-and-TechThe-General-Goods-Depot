@@ -99,7 +99,9 @@ This is the create() method in MySqlSalesOrderDao that handles checkout. It's in
 # 👨‍💻 Author
 Judy Sitero 
 
-GitHub: @judysitero
+* GitHub: [@judysitero](https://github.com/judysitero)
+* [LinkedIn](https://www.linkedin.com/in/judith-sitero/)
+
 
 
 
